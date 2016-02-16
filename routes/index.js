@@ -43,7 +43,7 @@ function addApiRoutes(app, name, route) {
 
 // Setup Route Bindings
 exports = module.exports = function(app) {
-	
+	app.all('/api*', keystone.middleware.cors);
 	// Views
 	app.get('/', routes.views.index);
 	// app.get('/blog/:category?', routes.views.blog);
@@ -63,7 +63,8 @@ exports = module.exports = function(app) {
 	addApiRoutes(app, 'ministryteam', routes.api.ministryteam);	
 	addApiRoutes(app, 'campus', routes.api.campus);	
 	addApiRoutes(app, 'event', routes.api.event);	
-	addApiRoutes(app, 'user', routes.api.user);	
+	addApiRoutes(app, 'user', routes.api.user);
+        addApiRoutes(app, 'resource', routes.api.resource);	
     addApiRoutes(app, 'communitygroup', routes.api.communitygroup);
     addApiRoutes(app, 'ride', routes.api.ride);		
     app.all('/api/ride/addPassenger', keystone.middleware.api, routes.api.ride.addPassenger);
