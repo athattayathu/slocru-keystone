@@ -93,6 +93,8 @@ keystone.set('email rules', [{
 
 keystone.set('email tests', require('./routes/emails'));
 
+//set up CORS ability
+keystone.set('cors allow origin', true);
 // Configure the navigation bar in Keystone's Admin UI
 
 keystone.set('nav', {
