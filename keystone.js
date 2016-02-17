@@ -88,7 +88,8 @@ keystone.set('email rules', [{
 	find: '/keystone/',
 	replace: (keystone.get('env') == 'production') ? 'http://crucentralcoast.com/keystone/' : 'http://localhost:3000/keystone/'
 }]);
-
+//Set up and utilize CORS
+keystone.set('cors allow origin', true);
 // Load your project's email test routes
 
 keystone.set('email tests', require('./routes/emails'));
