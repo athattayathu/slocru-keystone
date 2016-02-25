@@ -73,7 +73,9 @@ exports.addPassenger = function(req, res) {
 exports.dropPassenger = function(req, res) { 
     keystone.list("Passenger").model.findOne().where("_id", req.body.passenger_id).exec(function(err, passenger) {
         model.findOne().where("_id", req.body.ride_id).populate("event").exec(function(err, ride) {
-        
+            if (err){
+              return res.apiError('database error', err);
+            } 
         
             var index = ride.passengers.indexOf(req.body.passenger_id);
             ride.passengers.splice(index, 1);
