@@ -142,8 +142,6 @@ exports.dropRide = function(req, res) {
        if(err ){
            return res.apiError('database error', err);
        }
-       console.log(JSON.stringify(err));
-       console.log(JSON.stringify(ride));
         success = true;
         if(!ride){
            return res.apiResonse(success);
