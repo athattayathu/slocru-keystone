@@ -135,12 +135,19 @@ exports.dropPassenger = function(req, res) {
 }
 
 exports.dropRide = function(req, res) {
+    if(!req.body.ride_id){
+       return res.apiError(400,"incorrect payload", "ride_id not defined in payload",400);
+    }
     model.findOne().where("_id", req.body.ride_id).populate("passengers").populate("event").exec(function(err, ride) {    
-       if(err){
+       if(err ){
            return res.apiError('database error', err);
        }
+       console.log(JSON.stringify(err));
+       console.log(JSON.stringify(ride));
         success = true;
-    
+        if(!ride){
+           return res.apiResonse(success);
+        }
         // START: Send Notification to Passengers
         var regTokens = [];
         ride.passengers.forEach(function(passenger) {            
