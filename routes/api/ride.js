@@ -144,7 +144,7 @@ exports.dropRide = function(req, res) {
        }
         success = true;
         if(!ride){
-           return res.apiResonse(success);
+           return res.apiResponse(success);
         }
         // START: Send Notification to Passengers
         var regTokens = [];
