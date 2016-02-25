@@ -136,7 +136,9 @@ exports.dropPassenger = function(req, res) {
 
 exports.dropRide = function(req, res) {
     model.findOne().where("_id", req.body.ride_id).populate("passengers").populate("event").exec(function(err, ride) {    
-    
+       if(err){
+           return res.apiError('database error', err);
+       }
         success = true;
     
         // START: Send Notification to Passengers
