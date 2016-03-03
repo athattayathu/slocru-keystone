@@ -20,7 +20,7 @@ CommunityGroup.add({
     leaders: { type: Types.Relationship, ref: 'Users', many: true },
 	parentMinistry: { type: Types.Relationship, ref: 'Ministry', initial: true },
 	//days format "Sun, Mon, Tues, Wed, Thurs, Fri, Sat" i.e. "Mon, Wed"
-	days: { type: String, , initial: true }
+	days: { type: String, initial: true }
 });
 
 CommunityGroup.defaultColumns = 'name, leaders';
