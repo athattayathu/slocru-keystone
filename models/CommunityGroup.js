@@ -18,7 +18,9 @@ CommunityGroup.add({
     description: { type: String, initial: true },
 	meetingTime: { type: Types.Datetime, initial: true },
     leaders: { type: Types.Relationship, ref: 'Users', many: true },
-	parentMinistry: { type: Types.Relationship, ref: 'Ministry', initial: true }
+	parentMinistry: { type: Types.Relationship, ref: 'Ministry', initial: true },
+	//days format "Sun, Mon, Tues, Wed, Thurs, Fri, Sat" i.e. "Mon, Wed"
+	days: { type: String, , initial: true }
 });
 
 CommunityGroup.defaultColumns = 'name, leaders';
