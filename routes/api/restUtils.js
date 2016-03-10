@@ -1,6 +1,10 @@
 module.exports = {
     // used for queries
     find : function(model, req, res) {
+        if(req.method == 'OPTIONS'){
+           res.apiResponse(204);
+	   return;
+        }
         var data = (req.method == 'POST') ? req.body : req.query;
 
         // default 0 means no limit
@@ -32,6 +36,10 @@ module.exports = {
 
     // used to get everything from a collection
     list : function(model, req, res) {
+        if(req.method == 'OPTIONS'){
+           res.apiResponse(204);
+	   return;
+        }
         var query = model.find();
         query.exec(function(err, items) {
             if (err) return res.apiError('database error', err);
@@ -42,6 +50,10 @@ module.exports = {
 
     // gets something by it's id
     get : function(model, req, res) {
+	if(req.method == 'OPTIONS'){
+           res.apiResponse(204);
+	   return;
+        }
     	model.findById(req.params.id).exec(function(err, item) {
     		if (err) return res.apiError('database error', err);
     		if (!item) return res.apiError('not found');
@@ -52,6 +64,10 @@ module.exports = {
 
     //creates something... such description!
     create : function(model, req, res) {
+        if(req.method == 'OPTIONS'){
+	   res.apiResponse(204);
+           return;
+	}
     	var item = new model,
     		data = (req.method == 'POST') ? req.body : req.query;
 
@@ -66,6 +82,11 @@ module.exports = {
     
     //updates the model based on input
     update : function(model, req, res) {
+        if(req.method == 'OPTIONS'){
+           res.apiResponse(204);
+	   return;
+        }
+
         model.findById(req.body._id).exec(function(err, item) {
 		
             if (err) return res.apiError('database error', err);
