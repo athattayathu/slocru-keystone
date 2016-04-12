@@ -1,31 +1,74 @@
 var async = require('async'),
-        keystone = require('keystone'),
-        restUtils = require('./restUtils');
+    keystone = require('keystone'),
+    propertyReader = require('properties-reader'),
+    root = require("app-root-path"),
+    restUtils = require('./restUtils'),
+    mongoose = require('mongoose'),
+    express = require('express'),
+    router = express.Router();
 
-var Resource = keystone.list("Resource");
+var Resource = keystone.list('Resource');
 var model = Resource.model;
 
-// lists all resources
-exports.list = function(req, res) {
-        restUtils.list(model, req, res);
-}
+var properties = propertyReader(root + '/properties.ini');
+var leaderAPIKey = properties.path().leader.api.key;
 
-// get a resource by id
-exports.get = function(req, res) {
-        restUtils.get(model, req, res);
-}
 
-// comment
-exports.find = function(req, res) {
-        restUtils.find(model, req, res);
-}
+router.route('/')
+	.get(function(req, res) {
+		var params = {};
+		if (req.query.LeaderAPIKey != leaderAPIKey) {
+			params = {"restricted": {"$ne":true}};
+		}
+		model.find(params).exec(function(err, items) {
+			if (err) return res.send(err);
+			return res.json(items);
+		});
+	});
 
-//create a resource
-exports.create = function(req, res) {
-        restUtils.create(model, req, res);
-}
+router.route('/:id')
+	.get(function(req, res) {
+		model.findById(req.params.id).exec(function(err, item) {
+			if (err) return res.send(err);
+			if (!item) return res.send('not found');
+			if (item.tags.contains(leaderTagID)
+				&& req.query.LeaderAPIKey != leaderAPIKey) {
+				return res.send("not authorized");
+			}
+			return res.json(item);
+		});
+	});
 
-//updates a resource
-exports.update = function(req, res) {
-    restUtils.update(model, req, res);
-}
+router.route('/find')
+	.post(function(req, res) {
+		if (req.query.LeaderAPIKey != leaderAPIKey) {
+			req.body = {"$and":[req.body, {"restricted": {"$ne":true}}]}
+		}
+		restUtils.find(model, req, res);
+	});
+
+router.route('/search')
+	.post(function(req, res) {
+		if (req.query.LeaderAPIKey != leaderAPIKey) {
+			req.body.conditions = {"$and":[req.body.conditions, {"restricted": {"$ne":true}}]}
+		}
+		restUtils.search(model, req, res);
+	});
+
+router.route("/")
+	.post(function(req, res) {
+		restUtils.create(model, req, res);
+	});
+
+router.route("/:id")
+	.patch(function(req, res) {
+		restUtils.update(model, req, res);
+	});
+
+router.route('/enumValues/:key')
+	.get(function(req, res) {
+		restUtils.enumValues(model, req, res);
+	});
+
+module.exports = router;
+>>>>>>> ian/dev
