@@ -10,6 +10,10 @@ module.exports = {
     
     // used for queries
     find : function(model, req, res) {
+        if(req.method == 'OPTIONS'){
+           res.apiResponse(204);
+	   return;
+        }
         var data = (req.method == 'POST') ? req.body : req.query;
 
         // default 0 means no limit
@@ -47,6 +51,10 @@ module.exports = {
 
     // gets something by it's id
     get : function(model, req, res) {
+	if(req.method == 'OPTIONS'){
+           res.apiResponse(204);
+	   return;
+        }
     	model.findById(req.params.id).exec(function(err, item) {
     		if (err) return res.status(400).send(err);
             if (!item) return res.status(400).send(item);
